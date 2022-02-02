@@ -47,11 +47,12 @@ app.post("/", function(req, res){
     http.get(url, function(response){
         
         console.log(response.statusCode);
+        
         response.on("data", function(data){
             console.log(data);
             const weatherData = JSON.parse(data);
-            console.log(weatherData);
-            temp = weatherData.current.temperature;
+            if(weatherData.success != "false"){
+                temp = weatherData.current.temperature;
             pl = weatherData.location.name;
             time = weatherData.location.localtime;
             des = weatherData.current.weather_descriptions;
@@ -61,6 +62,10 @@ app.post("/", function(req, res){
             pressure = weatherData.current.pressure;
             visiblity = weatherData.current.visibility;
             res.render("index",{stemp: temp,place: pl,time:time,des:des,icon:icon,humidity: humidity,wind:speed,visiblity:visiblity,pressure:pressure});
+            }else{
+                res.redirect("/");
+            }
+            
         })
         
     });
